@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Compile
+arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -Iinc/Drivers/CMSIS/Device/ST/STM32F4xx/Include -Iinc/Drivers/CMSIS/Include -DSTM32F401xE -Os -c source/main.c -o build/main.o
+arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -Iinc/Drivers/CMSIS/Device/ST/STM32F4xx/Include -Iinc/Drivers/CMSIS/Include -DSTM32F401xE -Os -c source/system.c -o build/system.o
+arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -Iinc/Drivers/CMSIS/Device/ST/STM32F4xx/Include -Iinc/Drivers/CMSIS/Include -DSTM32F401xE -Os -c source/startup_stm32f401xe.s -o build/startup_stm32f401xe.o
+
+# Link
+arm-none-eabi-gcc -mcpu=cortex-m4 -mlittle-endian -mthumb -DSTM32F401xE -Tinc/Projects/STM32F401RE-Nucleo/Templates/TrueSTUDIO/STM32F4xx-Nucleo/STM32F401CE_FLASH.ld -Wl,--gc-sections build/main.o build/system.o build/startup_stm32f401xe.o -o build/main.elf
+
+# Convert
+arm-none-eabi-objcopy -Oihex build/main.elf build/main.hex
